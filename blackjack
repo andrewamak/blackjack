@@ -1,0 +1,131 @@
+#making a deck
+
+numbers = ['A', 'K', 'Q', 'J', 10, 9, 8, 7, 6, 5, 4, 3, 2]
+suits = ['Spades', 'Clubs', 'Hearts', 'Diamonds']
+deck = []
+
+for i,count in enumerate(numbers):
+    for j,count2 in enumerate(suits):
+        card = str(numbers[i]) + ' of ' + str(suits[j])
+        deck.append(card)
+
+        
+#now that we have deck as a variable, we can play blackjack
+
+import random
+
+#getting the sum of the hand
+def bj_sum(x):
+    total = []
+    #inital adding of the hand
+    for i in x:
+        if str.isdigit(str.strip(i[0:2])) == True:
+            total.append(int(str.strip((i[0:2]))))
+        elif i[0] == "A":
+            total.append(11)
+        elif i[0] == "K" or "Q" or "J":
+            total.append(10)         
+        
+        else:
+            continue
+    #if the value of the hand is greater than 21 change A's 
+    while sum(total) > 21:
+        if 11 in total:
+            total.remove(11)
+            total.append(1)
+        else:
+            break
+    total = sum(total)
+    return total
+
+#player's turn, hit me:
+def player_turn():
+    print("Dealer's hand: ")
+    print(dealer_hand[0] + ', [facedown]')
+    print('\n')
+    print("Your hand: ")
+    print(player_hand)
+    while True:
+        if bj_sum(player_hand) == 21:
+            print("Blackjack!")
+            break
+        while bj_sum(player_hand) < 21:
+            hit_me = input('Would you like a card? Y/N: ')
+            if str.upper(hit_me) == 'Y':
+                card = deck[random.randint(0,(len(deck)-1))]
+                player_hand.append(card)
+                deck.remove(card)
+                print(player_hand)
+            elif str.upper(hit_me) == 'N':
+                break
+            else:
+                continue
+        if bj_sum(player_hand) > 21:
+            print("You bust!")
+            break
+        break
+    return(player_hand)
+    return(deck)
+    print('player')
+    
+#dealer's turn
+def dealer_turn():
+    print("Dealer's hand: ")
+    print(dealer_hand)
+
+    while bj_sum(dealer_hand) < bj_sum(player_hand):
+        card = deck[random.randint(0,(len(deck)-1))]
+        dealer_hand.append(card)
+        deck.remove(card)
+        print(dealer_hand)
+    if bj_sum(dealer_hand) > bj_sum(player_hand):
+        if bj_sum(dealer_hand) > 21:
+            print("Dealer bust!")
+        else:
+            print("Dealer wins!")
+    elif bj_sum(dealer_hand) == bj_sum(player_hand):
+        print("push!")
+
+
+    return(dealer_hand)
+    return(deck)
+
+def blackjack():
+    player_turn()
+    if bj_sum(player_hand) <= 21:
+        dealer_turn()
+    else:
+        pass
+                
+#this is where the actual game takes place        
+play_again = 'Y'
+while play_again == 'Y':
+    dealer_hand = []
+    for i in range(2):
+        card = deck[random.randint(0,(len(deck)-1))]
+        dealer_hand.append(card)
+        deck.remove(card)
+        
+        
+
+    #player hand
+    player_hand = []
+    for i in range(2):
+        card = deck[random.randint(0,(len(deck)-1))]
+        player_hand.append(card)
+        deck.remove(card)
+
+    blackjack()
+
+    while True:
+        play_again = input("Play again? Y/N ")
+        play_again = str.title(play_again)
+        if play_again == 'N':
+            break
+        if play_again == 'Y':
+            break
+        else:
+            print('What did you say?' ) 
+            continue
+
+print("Thanks for playing!")
